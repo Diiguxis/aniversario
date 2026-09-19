@@ -506,7 +506,7 @@
   <div class="photobooth">
     <figure class="polaroid">
       <div class="polaroid-frame"><img src="assets/dayara-natal.jpg" alt="Dayara sorrindo na árvore de Natal"></div>
-      <figcaption>irmoem natal ✦</figcaption>
+      <figcaption>irmoem bb ✦</figcaption>
     </figure>
     <figure class="polaroid">
       <div class="polaroid-frame"><img src="irmoem3.jpeg" alt="Dayara com o irmão e a tia"></div>
@@ -530,8 +530,13 @@
   <section class="card">
     <canvas class="card-star" id="starListen"></canvas>
     <p class="section-label">trilha sonora do dia</p>
-    <div class="music-embed" id="dittoEmbed"></div>
-    <p class="track-caption">toque no ▶ do player acima pra tocar — depois ela fica em loop na página</p>
+    <div class="music-embed" id="dittoEmbed">
+      <iframe src="https://open.spotify.com/embed/track/3Hz3tTQwOdM6XkA0ALB2G9?utm_source=generator&theme=0"
+        title="Spotify player: Feel Special — TWICE"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>
+    </div>
+    <p class="track-caption">toque no ▶ do player acima pra tocar</p>
 
     <div class="more-tracks">
       <p class="more-tracks-label">mais da era KATSEYE + TWICE</p>
@@ -770,37 +775,13 @@ renderHalftoneStar(document.getElementById('starListen'), {size:64, spacing:4, c
   };
 })();
 
-/* ---------- Feel Special: plays continuously via the Spotify Embed API ---------- */
+/* ---------- gate: reveal + point at the real Spotify player ---------- */
 (function(){
-  const FEATURED_TRACK_URI = 'spotify:track:3Hz3tTQwOdM6XkA0ALB2G9';
-  let spotifyController = null;
-  let wantsToPlay = false;
-
-  const script = document.createElement('script');
-  script.src = 'https://open.spotify.com/embed/iframe-api/v1';
-  script.async = true;
-  document.head.appendChild(script);
-
-  window.onSpotifyIframeApiReady = function(IFrameAPI){
-    const element = document.getElementById('dittoEmbed');
-    IFrameAPI.createController(element, { uri: FEATURED_TRACK_URI, width: '100%', height: '152' }, function(EmbedController){
-      spotifyController = EmbedController;
-      if(wantsToPlay){ spotifyController.play(); }
-      EmbedController.addListener('playback_update', function(e){
-        if(e.data && e.data.isPaused && e.data.position === 0 && e.data.duration > 0){
-          spotifyController.play();
-        }
-      });
-    });
-  };
-
   renderHalftoneStar(document.getElementById('gateStar'), {size:96, spacing:5, color:'#f5f5f8', innerRatio:0.4});
 
   const gate = document.getElementById('playGate');
   function startCelebration(){
     gate.classList.add('hide');
-    wantsToPlay = true;
-    if(spotifyController){ spotifyController.play(); }
     if(window.__celebrate){ window.__celebrate(); }
 
     const embed = document.getElementById('dittoEmbed');
