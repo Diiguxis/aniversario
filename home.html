@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ditto pra Dayara</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --bg:#0a0a0d;
+    --card:#17161e;
+    --white:#f5f5f8;
+    --chrome-a:#eef0f4;
+    --chrome-b:#8b8f9c;
+    --pink:#ff2fa6;
+    --cyan:#28e8ff;
+    --violet:#8a5cff;
+    --line: rgba(245,245,248,0.12);
+    --shadow: rgba(0,0,0,0.55);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--white);
+    font-family:'Space Grotesk', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    padding-inline:0;
+    background-image: radial-gradient(rgba(245,245,248,0.06) 1px, transparent 1.2px);
+    background-size: 15px 15px;
+  }
+  [hidden]{display:none!important;}
+  img{max-width:100%;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---- wallpaper: real KATSEYE photos as a scrapbook wall ---- */
+  .wallpaper{
+    position:fixed;
+    inset:0;
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap:12px;
+    padding:16px;
+    opacity:0.55;
+    pointer-events:none;
+    z-index:0;
+  }
+  .wallpaper::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(ellipse 90% 65% at 50% 28%, transparent 0%, var(--bg) 76%),
+      linear-gradient(180deg, var(--bg) 0%, transparent 16%, transparent 84%, var(--bg) 100%);
+  }
+  .wall-card{
+    position:relative;
+    aspect-ratio: 3/4;
+    border-radius:10px;
+    overflow:hidden;
+    transform: rotate(var(--r, -4deg));
+    background:#000;
+  }
+  .wall-card img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter: grayscale(0.25) saturate(1.35) contrast(1.12);
+  }
+  .wall-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: var(--tint, rgba(255,47,166,0.22));
+    mix-blend-mode: color;
+  }
+  .wall-card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image: radial-gradient(rgba(255,255,255,0.55) 1px, transparent 1.3px);
+    background-size: 7px 7px;
+    mix-blend-mode: overlay;
+  }
+  .float-star{
+    position:absolute;
+    pointer-events:none;
+    z-index:1;
+    opacity:0.55;
+  }
+
+  header.hero{
+    padding: calc(env(safe-area-inset-top,0px) + 40px) 24px 44px;
+    position:relative;
+    z-index:2;
+    text-align:center;
+    overflow:hidden;
+  }
+
+  .hero-eyebrow{
+    font-family:'Space Mono', monospace;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    font-size:0.7rem;
+    color:var(--cyan);
+    margin:0 0 18px;
+  }
+
+  .hero-title{
+    font-family:'Bungee', sans-serif;
+    font-weight:400;
+    font-size: clamp(2.5rem, 12.5vw, 4rem);
+    line-height:1.02;
+    margin:0;
+    text-wrap:balance;
+    letter-spacing:0.01em;
+    background: linear-gradient(180deg, #ffffff 0%, var(--chrome-a) 38%, var(--chrome-b) 52%, #ffffff 66%, var(--chrome-a) 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    filter: drop-shadow(0 2px 0 rgba(0,0,0,0.6)) drop-shadow(0 0 18px rgba(255,47,166,0.25));
+  }
+
+  .hero-title .accent{
+    background: linear-gradient(180deg, var(--pink) 0%, #ffe1f4 45%, var(--pink) 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .hero-sub{
+    font-family:'Space Mono', monospace;
+    font-size: clamp(0.85rem, 3.4vw, 1rem);
+    color:var(--white);
+    opacity:0.75;
+    margin: 14px 0 0;
+    letter-spacing:0.02em;
+  }
+
+  .star-wrap{
+    display:flex;
+    justify-content:center;
+    margin: 28px 0 4px;
+    position:relative;
+  }
+  #heroStar{
+    width:220px;
+    height:220px;
+    filter: drop-shadow(0 0 24px rgba(255,255,255,0.25));
+  }
+  .spark{
+    position:absolute;
+    pointer-events:none;
+  }
+  #sparkPink{ width:54px; height:54px; top:-6px; left:8%; }
+  #sparkCyan{ width:40px; height:40px; bottom:4px; right:10%; }
+
+  .track-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    color:var(--white);
+    opacity:0.8;
+    margin-top:14px;
+    letter-spacing:0.03em;
+  }
+  .track-tag b{color:var(--cyan); font-weight:700;}
+
+  main{
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 22px 40px;
+    position:relative;
+    z-index:2;
+    overflow:visible;
+  }
+  footer{ position:relative; z-index:2; }
+
+  .photobooth{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin: -18px 0 28px;
+  }
+  .polaroid{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 10px 16px;
+    width: 150px;
+    box-shadow: 0 20px 40px var(--shadow), 0 0 0 1px rgba(255,47,166,0.15);
+    position:relative;
+  }
+  .polaroid:nth-child(1){ transform: rotate(-6deg); z-index:2; }
+  .polaroid:nth-child(2){ transform: rotate(5deg) translateY(10px); z-index:1; }
+  .polaroid::before{
+    content:"";
+    position:absolute;
+    top:-9px; left:50%;
+    transform:translateX(-50%) rotate(-3deg);
+    width:52px; height:18px;
+    background: linear-gradient(120deg, rgba(40,232,255,0.55), rgba(255,47,166,0.55));
+    opacity:0.6;
+    border-radius:2px;
+  }
+  .polaroid-frame{
+    aspect-ratio: 4/5;
+    border-radius:3px;
+    overflow:hidden;
+    position:relative;
+    background:#000;
+  }
+  .polaroid-frame img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+    filter: saturate(1.15) contrast(1.05);
+  }
+  .polaroid-frame::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image: radial-gradient(rgba(245,245,248,0.3) 1px, transparent 1.2px);
+    background-size: 9px 9px;
+    mix-blend-mode: overlay;
+  }
+  .polaroid figcaption{
+    font-family:'Space Mono', monospace;
+    font-size:0.66rem;
+    text-align:center;
+    margin-top:10px;
+    color:var(--white);
+    opacity:0.75;
+    letter-spacing:0.02em;
+  }
+  figure{margin:0;}
+
+  section.card{
+    background-color:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding: 26px 22px;
+    margin-bottom:36px;
+    box-shadow: 0 10px 24px var(--shadow);
+    position:relative;
+  }
+  .card-star{
+    position:absolute;
+    top:-30px;
+    right:-24px;
+    width:88px;
+    height:88px;
+    opacity:0.95;
+    z-index:3;
+  }
+  .card-star.left{ right:auto; left:-26px; top:-28px; }
+
+  .section-label{
+    font-family:'Space Mono', monospace;
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.2em;
+    color:var(--pink);
+    margin:0 0 14px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+  }
+  .section-label::before{
+    content:"";
+    width:10px;height:10px;
+    background:var(--cyan);
+    flex:none;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+
+  .letter{
+    background-image: radial-gradient(rgba(245,245,248,0.09) 1px, transparent 1.2px);
+    background-size: 11px 11px;
+  }
+  .letter::before{
+    content:'\201C';
+    position:absolute;
+    top:-6px;
+    left:14px;
+    font-family:'Bungee', sans-serif;
+    font-size:5.5rem;
+    line-height:1;
+    background: linear-gradient(180deg, var(--pink), var(--cyan));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    opacity:0.16;
+    pointer-events:none;
+  }
+  .letter-body{
+    position:relative;
+    padding-top:6px;
+  }
+  .letter p{
+    font-size:1.02rem;
+    line-height:1.68;
+    margin:0 0 14px;
+    max-width: 62ch;
+    color:var(--white);
+    opacity:0.92;
+  }
+  .letter p:last-child{margin-bottom:0;}
+  .letter-divider{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin: 18px 0 16px;
+  }
+  .letter-divider span{
+    width:5px; height:5px; border-radius:50%;
+    background:var(--line);
+  }
+  .letter-divider span:nth-child(3n+1){ background:var(--pink); opacity:0.6; }
+  .letter .sign{
+    font-family:'Bungee', sans-serif;
+    font-size:1.15rem;
+    background: linear-gradient(120deg, var(--cyan), var(--pink));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-top:4px;
+    display:inline-block;
+  }
+
+  .music-embed{
+    border-radius:14px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow: 0 10px 24px var(--shadow);
+    margin-bottom:12px;
+  }
+  .music-embed iframe{
+    display:block;
+    width:100%;
+    height:150px;
+    border:0;
+  }
+  .music-embed.compact iframe{ height:104px; }
+  .track-caption{
+    font-family:'Space Mono', monospace;
+    font-size:0.74rem;
+    opacity:0.6;
+    margin: 4px 0 20px;
+    text-align:center;
+  }
+  .more-tracks{
+    margin-top:22px;
+  }
+  .more-tracks-label{
+    font-family:'Space Mono', monospace;
+    font-size:0.66rem;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    opacity:0.55;
+    margin: 0 0 10px;
+  }
+  .track-grid{
+    display:grid;
+    gap:10px;
+  }
+
+  .cta{
+    display:block;
+    width:100%;
+    font-family:'Bungee', sans-serif;
+    font-weight:400;
+    font-size:0.9rem;
+    letter-spacing:0.02em;
+    color:#0a0a0d;
+    background: linear-gradient(120deg, var(--cyan), var(--pink));
+    border:none;
+    border-radius:999px;
+    padding:16px;
+    cursor:pointer;
+    box-shadow: 0 10px 26px rgba(255,47,166,0.35);
+    transition: transform 0.15s ease;
+  }
+  .cta:active{ transform: scale(0.97); }
+  .cta:focus-visible{ outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+  footer{
+    text-align:center;
+    padding: 10px 24px calc(env(safe-area-inset-bottom,0px) + 28px);
+    font-size:0.75rem;
+    opacity:0.5;
+    max-width:480px;
+    margin:0 auto;
+    font-family:'Space Mono', monospace;
+    letter-spacing:0.02em;
+  }
+
+  .hidden-msg{
+    margin-top:16px;
+    font-family:'Bungee', sans-serif;
+    font-size:1rem;
+    color:var(--pink);
+    text-align:center;
+  }
+
+  #confettiCanvas{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    pointer-events:none;
+    z-index:50;
+  }
+
+  #playGate{
+    position:fixed;
+    inset:0;
+    z-index:80;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:24px;
+    background: rgba(10,10,13,0.86);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    cursor:pointer;
+    transition: opacity 0.4s ease;
+  }
+  #playGate.hide{ opacity:0; pointer-events:none; }
+  #playGate .gate-star{
+    width:96px;
+    height:96px;
+    margin:0 auto 18px;
+    animation: pulseStar 1.8s ease-in-out infinite;
+  }
+  @keyframes pulseStar{
+    0%,100%{ transform:scale(1); opacity:1; }
+    50%{ transform:scale(1.1); opacity:0.75; }
+  }
+  #playGate .gate-eyebrow{
+    font-family:'Space Mono', monospace;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    font-size:0.7rem;
+    color:var(--cyan);
+    margin:0 0 10px;
+  }
+  #playGate .gate-title{
+    font-family:'Bungee', sans-serif;
+    font-size:1.3rem;
+    color:var(--white);
+    margin:0;
+  }
+  #playGate .gate-title b{
+    display:block;
+    margin-top:6px;
+    background: linear-gradient(120deg, var(--pink), var(--cyan));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    font-size:1.5rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="wallpaper" id="wallpaper" aria-hidden="true"></div>
+<canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+<div id="playGate" role="button" tabindex="0" aria-label="Toque para tocar Ditto e começar a comemoração">
+  <div>
+    <canvas class="gate-star" id="gateStar"></canvas>
+    <p class="gate-eyebrow">toque em qualquer lugar</p>
+    <p class="gate-title">pra começar a festa<b>Ditto — NewJeans</b></p>
+  </div>
+</div>
+
+<header class="hero">
+  <p class="hero-eyebrow">19 · 09 · Comeback especial</p>
+  <h1 class="hero-title">PARABÉNS<br><span class="accent">DAYARA</span></h1>
+  <p class="hero-sub">// hoje o palco é todo seu</p>
+  <div class="star-wrap">
+    <canvas id="sparkPink" class="spark"></canvas>
+    <canvas id="heroStar" role="img" aria-label="Estrela em halftone"></canvas>
+    <canvas id="sparkCyan" class="spark"></canvas>
+  </div>
+  <p class="track-tag">tocando agora · <b>Ditto</b> — NewJeans</p>
+</header>
+
+<main>
+  <div class="photobooth">
+    <figure class="polaroid">
+      <div class="polaroid-frame"><img src="assets/dayara-natal.jpg" alt="Dayara sorrindo na árvore de Natal"></div>
+      <figcaption>irmoem natal ✦</figcaption>
+    </figure>
+    <figure class="polaroid">
+      <div class="polaroid-frame"><img src="assets/dayara-bebe.jpg" alt="Dayara recém-nascida dormindo"></div>
+      <figcaption>irmoem bebê ✦</figcaption>
+    </figure>
+  </div>
+
+  <section class="card letter">
+    <canvas class="card-star left" id="starLetter"></canvas>
+    <p class="section-label">carta do photocard</p>
+    <div class="letter-body">
+      <p>Irmoem, hoje o dia é seu — e mesmo que eu não saiba escrever isso do jeito que você merece, queria muito que você soubesse o tanto que te amo.</p>
+      <p>Lembra da pestinha que amaçou meus pokémon de massinha? É a mesma pessoa que ainda me faz rir e ama músicas tanto quanto eu — só que agora com muito mais anos de vida kkkk, mais força e mais motivo pra se orgulhar de quem se tornou.</p>
+      <div class="letter-divider"><span></span><span></span><span></span><span></span><span></span></div>
+      <p>Que esse novo ano venha cheio de photocard raro, playlist boa, gente que te trata do jeito que você merece e todas as vitórias que você merece.</p>
+      <p>Feliz aniversário, irmoem. Danielers, sempre e para sempre.</p>
+      <p class="sign">com todo o amor, irmoem</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <canvas class="card-star" id="starListen"></canvas>
+    <p class="section-label">trilha sonora do dia</p>
+    <div class="music-embed" id="dittoEmbed"></div>
+    <p class="track-caption">Ditto toca em loop a página inteira ↑ direto do Spotify</p>
+
+    <div class="more-tracks">
+      <p class="more-tracks-label">mais da era KATSEYE + TWICE</p>
+      <div class="track-grid">
+        <div class="music-embed compact">
+          <iframe src="https://embed.music.apple.com/us/song/gabriela/1828469806" title="Apple Music player: Gabriela — KATSEYE" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
+        </div>
+        <div class="music-embed compact">
+          <iframe src="https://embed.music.apple.com/us/song/touch/1753359801" title="Apple Music player: Touch — KATSEYE" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
+        </div>
+        <div class="music-embed compact">
+          <iframe src="https://embed.music.apple.com/us/song/gnarly/1809854730" title="Apple Music player: Gnarly — KATSEYE" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
+        </div>
+        <div class="music-embed compact">
+          <iframe src="https://embed.music.apple.com/us/song/feel-special/1556087008" title="Apple Music player: Feel Special — TWICE" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
+        </div>
+        <div class="music-embed compact">
+          <iframe src="https://embed.music.apple.com/us/song/alcohol-free/1566636563" title="Apple Music player: Alcohol-Free — TWICE" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <button class="cta" id="celebrate">soltar confete ✦</button>
+    <p class="hidden-msg" id="secret" hidden>Bunnies não erram — feliz vida, Dayara! ✦</p>
+  </section>
+</main>
+
+<footer>feito com carinho pra Dayara · edição especial de aniversário</footer>
+
+<script>
+/* ---------- halftone star renderer (reused everywhere) ---------- */
+function drawStarPath(ctx,cx,cy,outerR,innerR,points){
+  ctx.beginPath();
+  for(let i=0;i<points*2;i++){
+    const r = i%2===0?outerR:innerR;
+    const a = (Math.PI/points)*i - Math.PI/2;
+    const x = cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+}
+
+function renderHalftoneStar(canvas, opts){
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  const size = opts.size;
+  canvas.width = size*dpr;
+  canvas.height = size*dpr;
+  canvas.style.width = size+'px';
+  canvas.style.height = size+'px';
+
+  const off = document.createElement('canvas');
+  off.width = size*dpr; off.height = size*dpr;
+  const octx = off.getContext('2d');
+  const outerR = size*dpr*0.42, innerR = outerR*(opts.innerRatio||0.42);
+  octx.fillStyle = '#fff';
+  octx.shadowColor = '#fff';
+  octx.shadowBlur = size*dpr*(opts.blur||0.09);
+  drawStarPath(octx, size*dpr/2, size*dpr/2, outerR, innerR, 5);
+  octx.fill();
+  drawStarPath(octx, size*dpr/2, size*dpr/2, outerR, innerR, 5);
+  octx.shadowBlur = 0;
+  octx.fill();
+
+  const data = octx.getImageData(0,0,size*dpr,size*dpr).data;
+  const ctx = canvas.getContext('2d');
+  const spacing = (opts.spacing||6)*dpr;
+  const maxR = spacing*0.56;
+  ctx.fillStyle = opts.color || '#fff';
+  for(let y=0; y<size*dpr; y+=spacing){
+    for(let x=0; x<size*dpr; x+=spacing){
+      const idx = (Math.floor(y)*size*dpr+Math.floor(x))*4;
+      const a = data[idx+3]/255;
+      if(a<0.05) continue;
+      const r = maxR*Math.sqrt(a);
+      ctx.beginPath();
+      ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fill();
+    }
+  }
+}
+
+renderHalftoneStar(document.getElementById('heroStar'), {size:220, spacing:6, color:'#f5f5f8'});
+renderHalftoneStar(document.getElementById('sparkPink'), {size:54, spacing:4, color:'#ff2fa6', innerRatio:0.38});
+renderHalftoneStar(document.getElementById('sparkCyan'), {size:40, spacing:4, color:'#28e8ff', innerRatio:0.38});
+renderHalftoneStar(document.getElementById('starLetter'), {size:64, spacing:4, color:'#28e8ff', innerRatio:0.4});
+renderHalftoneStar(document.getElementById('starListen'), {size:64, spacing:4, color:'#ff2fa6', innerRatio:0.4});
+
+/* ---------- floating stars scattered across the whole page (scrolls with content) ---------- */
+(function(){
+  const main = document.querySelector('main');
+  const spots = [
+    {top:10,   left:'2%',  size:26, color:'#ff2fa6'},
+    {top:10,   left:'88%', size:20, color:'#28e8ff'},
+    {top:260,  left:'90%', size:30, color:'#8a5cff'},
+    {top:520,  left:'4%',  size:22, color:'#28e8ff'},
+    {top:780,  left:'86%', size:26, color:'#ff2fa6'},
+    {top:1020, left:'3%',  size:32, color:'#8a5cff'},
+    {top:1260, left:'88%', size:20, color:'#28e8ff'},
+    {top:1480, left:'5%',  size:24, color:'#ff2fa6'}
+  ];
+  spots.forEach(function(s){
+    const c = document.createElement('canvas');
+    c.className = 'float-star';
+    c.style.top = s.top + 'px';
+    c.style.left = s.left;
+    main.appendChild(c);
+    renderHalftoneStar(c, {size:s.size, spacing:3, color:s.color, innerRatio:0.4});
+  });
+})();
+
+/* ---------- wallpaper: real KATSEYE photos, cropped per-member ---------- */
+(function(){
+  const wall = document.getElementById('wallpaper');
+  const tints = ['rgba(255,47,166,0.24)','rgba(40,232,255,0.22)','rgba(138,92,255,0.24)', 'transparent'];
+  const shots = [
+    {src:'assets/katseye-lineup.jpg',   pos:'6% 25%'},
+    {src:'assets/katseye-lineup.jpg',   pos:'24% 25%'},
+    {src:'assets/katseye-lineup.jpg',   pos:'41% 25%'},
+    {src:'assets/katseye-lineup.jpg',   pos:'58% 25%'},
+    {src:'assets/katseye-lineup.jpg',   pos:'76% 25%'},
+    {src:'assets/katseye-lineup.jpg',   pos:'94% 25%'},
+    {src:'assets/katseye-concert.jpg',  pos:'8% 30%'},
+    {src:'assets/katseye-concert.jpg',  pos:'26% 30%'},
+    {src:'assets/katseye-concert.jpg',  pos:'44% 30%'},
+    {src:'assets/katseye-concert.jpg',  pos:'62% 30%'},
+    {src:'assets/katseye-concert.jpg',  pos:'80% 30%'},
+    {src:'assets/katseye-concert.jpg',  pos:'96% 30%'},
+    {src:'assets/katseye-daniela.jpg',  pos:'50% 12%'},
+    {src:'assets/katseye-daniela2.jpg', pos:'50% 15%'},
+    {src:'assets/katseye-megan.jpg',    pos:'50% 12%'},
+    {src:'assets/katseye-seattle1.jpg', pos:'20% 35%'},
+    {src:'assets/katseye-seattle1.jpg', pos:'70% 35%'},
+    {src:'assets/katseye-seattle2.jpg', pos:'22% 30%'},
+    {src:'assets/katseye-seattle2.jpg', pos:'70% 30%'}
+  ];
+  const count = 34;
+  for(let i=0;i<count;i++){
+    const shot = shots[i % shots.length];
+    const el = document.createElement('div');
+    el.className = 'wall-card';
+    el.style.setProperty('--r', (Math.random()*8-4).toFixed(1)+'deg');
+    el.style.setProperty('--tint', tints[i % tints.length]);
+    const img = document.createElement('img');
+    img.src = shot.src;
+    img.loading = 'lazy';
+    img.alt = '';
+    img.style.objectPosition = shot.pos;
+    el.appendChild(img);
+    wall.appendChild(el);
+  }
+})();
+
+/* ---------- confetti: full-screen, multi-shape ---------- */
+(function(){
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  const btn = document.getElementById('celebrate');
+  const secret = document.getElementById('secret');
+  const colors = ['#ff2fa6', '#28e8ff', '#8a5cff', '#f5f5f8'];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let particles = [];
+  let raf = null;
+
+  function resize(){
+    canvas.width = window.innerWidth * devicePixelRatio;
+    canvas.height = window.innerHeight * devicePixelRatio;
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function spawnFrom(x, y, dirBias){
+    for(let i=0;i<55;i++){
+      particles.push({
+        x, y,
+        vx: dirBias*(2+Math.random()*3) + (Math.random()-0.5)*2,
+        vy: -(6+Math.random()*6),
+        g: 0.22 + Math.random()*0.07,
+        drag: 0.99,
+        size: 7 + Math.random()*7,
+        color: colors[(Math.random()*colors.length)|0],
+        rot: Math.random()*Math.PI,
+        vr: (Math.random()-0.5)*0.35,
+        life: 0,
+        maxLife: 130 + Math.random()*60
+      });
+    }
+  }
+
+  function burst(){
+    const w = window.innerWidth, h = window.innerHeight;
+    spawnFrom(w*0.12, h*0.95, 1);
+    spawnFrom(w*0.88, h*0.95, -1);
+    spawnFrom(w*0.5, h*0.98, 0);
+    if(!raf) tick();
+  }
+
+  function drawParticle(p){
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.globalAlpha = Math.max(0, 1 - p.life/p.maxLife);
+    ctx.fillStyle = p.color;
+    drawStarPath(ctx, 0, 0, p.size*0.55, p.size*0.24, 5);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+    particles.forEach(p=>{
+      p.vy += p.g;
+      p.vx *= p.drag;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.life++;
+      drawParticle(p);
+    });
+    particles = particles.filter(p=> p.life < p.maxLife && p.y < window.innerHeight+40);
+    if(particles.length){
+      raf = requestAnimationFrame(tick);
+    } else {
+      raf = null;
+    }
+  }
+
+  btn.addEventListener('click', function(){
+    secret.hidden = false;
+    if(reduceMotion){ return; }
+    burst();
+  });
+
+  window.__celebrate = function(){
+    if(!reduceMotion) burst();
+  };
+})();
+
+/* ---------- Ditto: plays continuously via the Spotify Embed API ---------- */
+(function(){
+  const DITTO_URI = 'spotify:track:3r8RuvgbX9s7ammBn07D3W';
+  let spotifyController = null;
+  let wantsToPlay = false;
+
+  const script = document.createElement('script');
+  script.src = 'https://open.spotify.com/embed/iframe-api/v1';
+  script.async = true;
+  document.head.appendChild(script);
+
+  window.onSpotifyIframeApiReady = function(IFrameAPI){
+    const element = document.getElementById('dittoEmbed');
+    IFrameAPI.createController(element, { uri: DITTO_URI, width: '100%', height: '152' }, function(EmbedController){
+      spotifyController = EmbedController;
+      if(wantsToPlay){ spotifyController.play(); }
+      EmbedController.addListener('playback_update', function(e){
+        if(e.data && e.data.isPaused && e.data.position === 0 && e.data.duration > 0){
+          spotifyController.play();
+        }
+      });
+    });
+  };
+
+  renderHalftoneStar(document.getElementById('gateStar'), {size:96, spacing:5, color:'#f5f5f8', innerRatio:0.4});
+
+  const gate = document.getElementById('playGate');
+  function startCelebration(){
+    gate.classList.add('hide');
+    wantsToPlay = true;
+    if(spotifyController){ spotifyController.play(); }
+    if(window.__celebrate){ window.__celebrate(); }
+  }
+  gate.addEventListener('click', startCelebration);
+  gate.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); startCelebration(); }
+  });
+})();
+</script>
+</body>
+</html>
