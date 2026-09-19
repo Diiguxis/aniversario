@@ -340,6 +340,14 @@
     border:1px solid var(--line);
     box-shadow: 0 10px 24px var(--shadow);
     margin-bottom:12px;
+    transition: box-shadow 0.3s ease;
+  }
+  .music-embed.pulse-highlight{
+    animation: embedPulse 1s ease 4;
+  }
+  @keyframes embedPulse{
+    0%,100%{ box-shadow: 0 10px 24px var(--shadow); }
+    50%{ box-shadow: 0 0 0 5px rgba(40,232,255,0.55), 0 10px 24px var(--shadow); }
   }
   .music-embed iframe{
     display:block;
@@ -478,7 +486,7 @@
   <div>
     <canvas class="gate-star" id="gateStar"></canvas>
     <p class="gate-eyebrow">toque em qualquer lugar</p>
-    <p class="gate-title">pra começar a festa<b>Feel Special — TWICE</b></p>
+    <p class="gate-title">toque no ▶ do player<b>Feel Special — TWICE</b></p>
   </div>
 </div>
 
@@ -523,7 +531,7 @@
     <canvas class="card-star" id="starListen"></canvas>
     <p class="section-label">trilha sonora do dia</p>
     <div class="music-embed" id="dittoEmbed"></div>
-    <p class="track-caption">Feel Special toca em loop a página inteira ↑ direto do Spotify</p>
+    <p class="track-caption">toque no ▶ do player acima pra tocar — depois ela fica em loop na página</p>
 
     <div class="more-tracks">
       <p class="more-tracks-label">mais da era KATSEYE + TWICE</p>
@@ -794,6 +802,13 @@ renderHalftoneStar(document.getElementById('starListen'), {size:64, spacing:4, c
     wantsToPlay = true;
     if(spotifyController){ spotifyController.play(); }
     if(window.__celebrate){ window.__celebrate(); }
+
+    const embed = document.getElementById('dittoEmbed');
+    setTimeout(function(){
+      embed.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      embed.classList.add('pulse-highlight');
+      setTimeout(function(){ embed.classList.remove('pulse-highlight'); }, 4200);
+    }, 350);
   }
   gate.addEventListener('click', startCelebration);
   gate.addEventListener('keydown', function(e){
