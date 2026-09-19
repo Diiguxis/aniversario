@@ -474,11 +474,11 @@
 <div class="wallpaper" id="wallpaper" aria-hidden="true"></div>
 <canvas id="confettiCanvas" aria-hidden="true"></canvas>
 
-<div id="playGate" role="button" tabindex="0" aria-label="Toque para tocar Ditto e começar a comemoração">
+<div id="playGate" role="button" tabindex="0" aria-label="Toque para tocar Feel Special e começar a comemoração">
   <div>
     <canvas class="gate-star" id="gateStar"></canvas>
     <p class="gate-eyebrow">toque em qualquer lugar</p>
-    <p class="gate-title">pra começar a festa<b>Ditto — NewJeans</b></p>
+    <p class="gate-title">pra começar a festa<b>Feel Special — TWICE</b></p>
   </div>
 </div>
 
@@ -491,7 +491,7 @@
     <canvas id="heroStar" role="img" aria-label="Estrela em halftone"></canvas>
     <canvas id="sparkCyan" class="spark"></canvas>
   </div>
-  <p class="track-tag">tocando agora · <b>Ditto</b> — NewJeans</p>
+  <p class="track-tag">tocando agora · <b>Feel Special</b> — TWICE</p>
 </header>
 
 <main>
@@ -501,8 +501,8 @@
       <figcaption>irmoem natal ✦</figcaption>
     </figure>
     <figure class="polaroid">
-      <div class="polaroid-frame"><img src="assets/dayara-bebe.jpg" alt="Dayara recém-nascida dormindo"></div>
-      <figcaption>irmoem bebê ✦</figcaption>
+      <div class="polaroid-frame"><img src="irmoem3.jpeg" alt="Dayara com o irmão e a tia"></div>
+      <figcaption>irmoem hoje ✦</figcaption>
     </figure>
   </div>
 
@@ -523,11 +523,14 @@
     <canvas class="card-star" id="starListen"></canvas>
     <p class="section-label">trilha sonora do dia</p>
     <div class="music-embed" id="dittoEmbed"></div>
-    <p class="track-caption">Ditto toca em loop a página inteira ↑ direto do Spotify</p>
+    <p class="track-caption">Feel Special toca em loop a página inteira ↑ direto do Spotify</p>
 
     <div class="more-tracks">
       <p class="more-tracks-label">mais da era KATSEYE + TWICE</p>
       <div class="track-grid">
+        <div class="music-embed compact">
+          <iframe src="https://embed.music.apple.com/us/song/ditto/1657231962" title="Apple Music player: Ditto — NewJeans" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
+        </div>
         <div class="music-embed compact">
           <iframe src="https://embed.music.apple.com/us/song/gabriela/1828469806" title="Apple Music player: Gabriela — KATSEYE" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
         </div>
@@ -536,9 +539,6 @@
         </div>
         <div class="music-embed compact">
           <iframe src="https://embed.music.apple.com/us/song/gnarly/1809854730" title="Apple Music player: Gnarly — KATSEYE" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
-        </div>
-        <div class="music-embed compact">
-          <iframe src="https://embed.music.apple.com/us/song/feel-special/1556087008" title="Apple Music player: Feel Special — TWICE" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
         </div>
         <div class="music-embed compact">
           <iframe src="https://embed.music.apple.com/us/song/alcohol-free/1566636563" title="Apple Music player: Alcohol-Free — TWICE" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
@@ -762,9 +762,9 @@ renderHalftoneStar(document.getElementById('starListen'), {size:64, spacing:4, c
   };
 })();
 
-/* ---------- Ditto: plays continuously via the Spotify Embed API ---------- */
+/* ---------- Feel Special: plays continuously via the Spotify Embed API ---------- */
 (function(){
-  const DITTO_URI = 'spotify:track:3r8RuvgbX9s7ammBn07D3W';
+  const FEATURED_TRACK_URI = 'spotify:track:3Hz3tTQwOdM6XkA0ALB2G9';
   let spotifyController = null;
   let wantsToPlay = false;
 
@@ -775,7 +775,7 @@ renderHalftoneStar(document.getElementById('starListen'), {size:64, spacing:4, c
 
   window.onSpotifyIframeApiReady = function(IFrameAPI){
     const element = document.getElementById('dittoEmbed');
-    IFrameAPI.createController(element, { uri: DITTO_URI, width: '100%', height: '152' }, function(EmbedController){
+    IFrameAPI.createController(element, { uri: FEATURED_TRACK_URI, width: '100%', height: '152' }, function(EmbedController){
       spotifyController = EmbedController;
       if(wantsToPlay){ spotifyController.play(); }
       EmbedController.addListener('playback_update', function(e){
